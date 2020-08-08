@@ -1,5 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Grid } from "@material-ui/core";
+import PriceCard from "../components/PriceCard";
 const useStyles = makeStyles((theme) => ({
   heading: {
     textAlign: "center",
@@ -13,6 +15,17 @@ const Home = () => {
   return (
     <>
       <h2 className={classes.heading}>Fuel Prices</h2>
+      <Grid container justify="space-evenly">
+        <Grid item>
+          <PriceCard />
+        </Grid>
+        <Grid item>
+          <PriceCard />
+        </Grid>
+        <Grid item>
+          <PriceCard />
+        </Grid>
+      </Grid>
     </>
   );
 };
