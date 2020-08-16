@@ -1,66 +1,79 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import axios from "axios";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { green, red } from "@material-ui/core/colors";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
+    display: "block",
   },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
+  state: {
+    padding: "2%",
   },
   pos: {
     marginBottom: 12,
   },
 });
 
-const PriceCard = () => {
+const PriceCard = ({ state, data }) => {
   const classes = useStyles();
 
-  useEffect(() => {
-    axios({
-      method: "GET",
-      url:
-        "https://newsrain-petrol-diesel-prices-india-v1.p.rapidapi.com/capitals/history",
-      headers: {
-        "content-type": "application/octet-stream",
-        "x-rapidapi-host":
-          "newsrain-petrol-diesel-prices-india-v1.p.rapidapi.com",
-        "x-rapidapi-key": "97d22e9267msh175e0d29de09121p140dd5jsn4b17b5cdccd0",
-        useQueryString: true,
-      },
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card className={classes.root}>
       <CardContent>
-        <Typography variant="h5" component="h2">
-          Petrol
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
-        </Typography>
-        <Typography variant="h5" component="h2">
-          Diesel
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
-        </Typography>
+        <Grid item container direction="row">
+          <Grid
+            item
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+            xs
+          >
+            <Typography variant="h5" component="h2">
+              {state.title}
+            </Typography>
+            <Typography variant="body2" component="p" color="textSecondary">
+              {data && data.district}
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            {data &&
+              data.products.map((value, index) => {
+                return (
+                  <React.Fragment key={"price" + index}>
+                    <Typography variant="h6" component="h3">
+                      {value.productName}
+                    </Typography>
+                    <Typography component="h6" color="textSecondary">
+                      {value.productPrice} {value.productCurrency}
+                      {value.priceChangeSign === "+" ? (
+                        <ArrowDropUpIcon
+                          style={{
+                            color: red["A700"],
+                            verticalAlign: "middle",
+                          }}
+                        />
+                      ) : (
+                        <ArrowDropDownIcon
+                          style={{
+                            color: green[500],
+                            verticalAlign: "middle",
+                          }}
+                        />
+                      )}
+                      {value.priceChange}
+                    </Typography>
+                  </React.Fragment>
+                );
+              })}
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );
